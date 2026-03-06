@@ -76,10 +76,10 @@ const fruitVoices = {
   orange: "sounds/orange.wav",
   grape: "sounds/grape.wav",
   strawberry: "sounds/strawberry.wav",
-  melon: "sounds/watermelon.wav",
+  watermelon: "sounds/watermelon.wav",
   peach: "sounds/peach.wav",
-  pineapple: "sounds/persimmon.wav",
-  cherry: "sounds/kiwi.wav"
+  persimmon: "sounds/persimmon.wav",
+  kiwi: "sounds/kiwi.wav"
 };
 
 function playCorrectSound() {
@@ -108,7 +108,7 @@ function playWrongSound() {
 
 function newQuestion() {
   const q = fruits[Math.floor(Math.random()*fruits.length)];
-  correct = q.name;
+  correct = q.file;
 
   document.getElementById("question").src = "images/"+q.file+".jpg";
 
@@ -119,7 +119,7 @@ function newQuestion() {
   shuffled.forEach(f=>{
     const img = document.createElement("img");
     img.src = "images/"+f.file+"2.jpg";
-    img.onclick = ()=>checkAnswer(f.name);
+    img.onclick = ()=>checkAnswer(f.file);
     choices.appendChild(img);
   });
 
@@ -131,30 +131,36 @@ function checkAnswer(answer) {
 
   if (answer === correct) {
 
+    result.textContent = "せいかい！";
+    result.className = "correct";
+
+    const voice = correctVoices[Math.floor(Math.random()*correctVoices.length)];
+
     // ① ピンポーン
     correctSE.currentTime = 0;
     correctSE.play();
 
-    // ② せいかい！
+    // ② 正解ボイス
     setTimeout(() => {
-      correctVoice.currentTime = 0;
-      correctVoice.play();
+      voice.currentTime = 0;
+      voice.play();
     }, 700);
 
     // ③ フルーツ名
     setTimeout(() => {
       new Audio(fruitVoices[correct]).play();
     }, 1500);
+
   } else {
+
     result.textContent = "ざんねん";
     result.className = "wrong";
+
     playWrongSound();
   }
 
-  setTimeout(newQuestion, 1800);
+  setTimeout(newQuestion, 2200);
 }
-
-newQuestion();
 </script>
 
 </body>
