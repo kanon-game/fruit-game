@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>フルーツ当てゲーム（音声強化版）</title>
+<style>
+body { text-align:center; font-family:sans-serif; }
+#question { width:180px; }
+.choices { display:grid; grid-template-columns:repeat(3, 1fr); gap:10px; max-width:420px; margin:20px auto; }
+.choices img { width:100%; cursor:pointer; }
+#result { font-size:24px; margin-top:20px; height:40px; }
+.correct { color:green; animation:pop 0.5s ease; }
+.wrong { color:red; animation:shake 0.5s ease; }
+@keyframes pop { 0%{transform:scale(0.5);} 100%{transform:scale(1);} }
+@keyframes shake { 0%,100%{transform:translateX(0);} 25%{transform:translateX(-10px);} 75%{transform:translateX(10px);} }
+</style>
+</head>
+<body>
+
+<h1>このフルーツはなに？</h1>
+<img id="question">
+
+<div class="choices" id="choices"></div>
+<p id="result"></p>
+
+<script>
+const fruits = [
+  {name:"バナナ", file:"banana"},
+  {name:"りんご", file:"apple"},
+  {name:"イチゴ", file:"strawberry"},
+  {name:"みかん", file:"orange"},
+  {name:"ぶどう", file:"grape"},
+  {name:"キウイフルーツ", file:"kiwi"},
+  {name:"もも", file:"peach"},
+  {name:"かき", file:"persimmon"},
+  {name:"すいか", file:"watermelon"}
+];
+
+let correct = "";
+
+// 効果音
+const correctSE = new Audio("sounds/correct.mp3");
+const wrongSE = new Audio("sounds/incorrect.mp3");
+
+// ボイス
+const correctVoices = [
+  "sounds/sugoi.mp3",
+  "sounds/yokudekimashita.mp3",
+  "sounds/omedetou.mp3"
+];
+
+const wrongVoices = [
+  "sounds/hazure.mp3",
+  "sounds/oshii.mp3",
+  "sounds/zannen.mp3"
+];
+
+function playCorrectSound() {
+  const voice = new Audio(correctVoices[Math.floor(Math.random()*correctVoices.length)]);
+  correctSE.currentTime = 0;
+  correctSE.play();
+  correctSE.onended = () => {
+    voice.play();
+  };
+}
+
+function playWrongSound() {
+  const voice = new Audio(wrongVoices[Math.floor(Math.random()*wrongVoices.length)]);
+  wrongSE.currentTime = 0;
+  wrongSE.play();
+  wrongSE.onended = () => {
+    voice.play();
+  };
+}
+
+function newQuestion() {
+  const q = fruits[Math.floor(Math.random()*fruits.length)];
+  correct = q.name;
+
+  document.getElementById("question").src = "images/"+q.file+".jpg";
+
+  const shuffled = [...fruits].sort(()=>0.5-Math.random());
+  const choices = document.getElementById("choices");
+  choices.innerHTML = "";
+
+  shuffled.forEach(f=>{
+    const img = document.createElement("img");
+    img.src = "images/"+f.file+"2.jpg";
+    img.onclick = ()=>checkAnswer(f.name);
+    choices.appendChild(img);
+  });
+
+  document.getElementById("result").textContent = "";
+}
+
+function checkAnswer(answer) {
+  const result = document.getElementById("result");
+
+  if(answer === correct) {
+    result.textContent = "せいかい！";
+    result.className = "correct";
+    playCorrectSound();
+  } else {
+    result.textContent = "ざんねん";
+    result.className = "wrong";
+    playWrongSound();
+  }
+
+  setTimeout(newQuestion, 1800);
+}
+
+newQuestion();
+</script>
+
+</body>
+</html>
