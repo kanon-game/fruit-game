@@ -69,6 +69,19 @@ const wrongVoices = [
   new Audio("sounds/zannen.mp3")
 ];
 
+//フルーツ読み上げ
+const fruitVoices = {
+  apple: "sounds/apple.wav",
+  banana: "sounds/banana.wav",
+  orange: "sounds/orange.wav",
+  grape: "sounds/grape.wav",
+  strawberry: "sounds/strawberry.wav",
+  melon: "sounds/watermelon.wav",
+  peach: "sounds/peach.wav",
+  pineapple: "sounds/persimmon.wav",
+  cherry: "sounds/kiwi.wav"
+};
+
 function playCorrectSound() {
   const voice = correctVoices[Math.floor(Math.random()*correctVoices.length)];
 
@@ -116,10 +129,22 @@ function newQuestion() {
 function checkAnswer(answer) {
   const result = document.getElementById("result");
 
-  if(answer === correct) {
-    result.textContent = "せいかい！";
-    result.className = "correct";
-    playCorrectSound();
+  if (answer === correct) {
+
+    // ① ピンポーン
+    correctSE.currentTime = 0;
+    correctSE.play();
+
+    // ② せいかい！
+    setTimeout(() => {
+      correctVoice.currentTime = 0;
+      correctVoice.play();
+    }, 700);
+
+    // ③ フルーツ名
+    setTimeout(() => {
+      new Audio(fruitVoices[correct]).play();
+    }, 1500);
   } else {
     result.textContent = "ざんねん";
     result.className = "wrong";
