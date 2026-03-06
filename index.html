@@ -55,33 +55,40 @@ let correct = "";
 const correctSE = new Audio("sounds/correct.mp3");
 const wrongSE = new Audio("sounds/Incorrect.mp3");
 
-// ボイス
+// 正解ボイス
 const correctVoices = [
-  "sounds/sugoi.mp3",
-  "sounds/yokudekimashita.mp3",
-  "sounds/omedetou.mp3"
+  new Audio("sounds/sugoi.mp3"),
+  new Audio("sounds/yokudekimashita.mp3"),
+  new Audio("sounds/omedetou.mp3")
 ];
 
+// 不正解ボイス
 const wrongVoices = [
-  "sounds/hazure.mp3",
-  "sounds/oshii.mp3",
-  "sounds/zannen.mp3"
+  new Audio("sounds/hazure.mp3"),
+  new Audio("sounds/oshii.mp3"),
+  new Audio("sounds/zannen.mp3")
 ];
 
 function playCorrectSound() {
-  const voice = new Audio(correctVoices[Math.floor(Math.random()*correctVoices.length)]);
+  const voice = correctVoices[Math.floor(Math.random()*correctVoices.length)];
+
   correctSE.currentTime = 0;
   correctSE.play();
+
   correctSE.onended = () => {
+    voice.currentTime = 0;
     voice.play();
   };
 }
 
 function playWrongSound() {
-  const voice = new Audio(wrongVoices[Math.floor(Math.random()*wrongVoices.length)]);
+  const voice = wrongVoices[Math.floor(Math.random()*wrongVoices.length)];
+
   wrongSE.currentTime = 0;
   wrongSE.play();
+
   wrongSE.onended = () => {
+    voice.currentTime = 0;
     voice.play();
   };
 }
