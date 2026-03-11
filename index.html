@@ -49,6 +49,7 @@ const fruits = [
 ];
 
 let correct = "";
+let locked = false;
 
 // 効果音
 const correctSE = new Audio("sounds/correct.mp3");
@@ -106,6 +107,7 @@ function playWrongSound() {
 }
 
 function newQuestion() {
+  locked = false;
   const q = fruits[Math.floor(Math.random()*fruits.length)];
   correct = q.file;
 
@@ -126,6 +128,9 @@ function newQuestion() {
 }
 
 function checkAnswer(answer) {
+  if (locked) return;
+  locked = true;
+  
   const result = document.getElementById("result");
 
   if (answer === correct) {
